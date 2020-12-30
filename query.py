@@ -4,6 +4,12 @@ import pickle
 import sys
 import json
 
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+
+# create stemmer
+factory = StemmerFactory()
+stemmer = factory.create_stemmer()
+
 #Argumen check
 if len(sys.argv) != 4 :
 	print ("\n\nPenggunaan\n\tquery.py [index] [n] [query]..\n")
@@ -18,7 +24,7 @@ with open(sys.argv[1], 'rb') as indexdb:
     list_doc = {}
 
     for q in query:
-        print(q)
+        q = stemmer.stem(q)
         try :
             for doc in indexFile[q]:
                 if doc['url'] in list_doc :
