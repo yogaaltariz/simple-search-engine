@@ -28,7 +28,6 @@ def preprocessing_doc(text) :
     body = body.lower()
     body = ' '.join(re.split('\.\s+',body))
     body = body.replace("http://", " ").replace("https://", " ")
-    body = stemmer.stem(body)
     return link, title, body
 
 CORPUS_PATH = './corpus/'
@@ -45,8 +44,8 @@ for file in files:
     with open(file,'r') as data:
         lines = data.readlines()
         link, title, body = preprocessing_doc(lines)
-        
-        for word in body.split():
+        stemmed_body = stemmer.stem(body)
+        for word in stemmed_body.split():
             if word in stopwords:
                 continue
 
@@ -65,7 +64,7 @@ for file in files:
         tf_data[link] = {
             'title': title,
             'tf': tf,
-            'caption': body[:30]
+            'caption': body[:255]
         }
 
 # Calculate Idf
@@ -99,5 +98,5 @@ for word in df_data:
 
 
 # Write dictionary to file
-with open('inverted_index.pickle', 'wb') as file:
+with open('./index/inverted_index.pickle', 'wb') as file:
      pickle.dump(tf_idf, file)

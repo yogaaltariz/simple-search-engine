@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.0/dist/alpine.min.js"
+      defer
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div x-data="searchComponent()" class="container">
+      <div class="prose">
+        <h1>Simple Search Engine</h1>
+        <div>
+          <p>
+            this project crawl some news from
+            <a href="//detik.com" target="_blank">detik</a> which news portal
+            from Indonesia and then I built an inverted index from the crawling
+            news.
+          </p>
+        </div>
+      </div>
+
+      <form id="search-form" @submit.prevent="getResults">
+        <div class="search-bar">
+          <svg
+            class="search-bar-icon"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+
+          <input
+            x-model="search"
+            type="text"
+            class="search-bar-input"
+            name="search"
+            placeholder="masukkan kata kunci, contoh: corona"
+          />
+        </div>
+      </form>
+
+      <div id="results">
+        <template x-if="results.length">
+          <ul>
+            <template x-for="(result, i) in results" :key="i">
+              <li>
+                <a x-bind:href="result.url" x-text="result.title"></a>
+                <p x-text="result.caption"></p>
+              </li>
+            </template>
+          </ul>
+        </template>
+
+
+        <template x-if="!results.length && emptyResults">
+            <h3> Maaf kami tidak menemukan data yang anda cari</h3>            
+        </template>
+      </div>
+    </div>
+
+    <script>
+      function searchComponent() {
+        return {
+          search: null,
+          results: [],
+          emptyResults: false,
+          async getResults() {
+            try {
+              const current = new URL(window.location.href);
+
+              const { data } = await axios.get(`${current.origin}/api`, {
+                params: { search: this.search },
+              });
+              this.results = [...data.results];
+
+              this.emptyResults = data.results.length === 0 && this.search
+            } catch (error) {
+              console.log(error);
+            }
+          },
+        };
+      }
+    </script>
+  </body>
+</html>
