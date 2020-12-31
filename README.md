@@ -2,6 +2,8 @@
 
 this is one of my college projects from information retrieval coursework. What I built here is simple search engine that able to search from inverted index that built from news data that crawled from [detik](https://www.detik.com).
 
+![alt text](https://raw.githubusercontent.com/yogaaltariz/simple-search-engine/main/screenshot/Screenshot%20from%202020-12-31%2017-04-26.png "screnshot")
+
 ## Run the Web GUI
 1. install the environment with command: <br>
 `conda env create -f environment.yml --name some_env_name`
