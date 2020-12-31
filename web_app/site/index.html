@@ -56,7 +56,7 @@
             <template x-for="(result, i) in results" :key="i">
               <li>
                 <a x-bind:href="result.url" x-text="result.title"></a>
-                <p x-text="result.caption"></p>
+                <p x-text="`${result.caption}...`"></p>
               </li>
             </template>
           </ul>
